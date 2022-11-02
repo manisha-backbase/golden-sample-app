@@ -42,7 +42,7 @@ jobs:
         with:
           latest-version: ${{ steps.set-project-from-tag.outputs.version}}
           release-notes: ${{ github.event.release.body }}
-          path-to-changelog: 'libs/${{ steps.set-project-from-tag.outputs.module }}'
+          path-to-changelog: 'libs/${{ steps.set-project-from-tag.outputs.module }}/CHANGELOG.md'
       
       - name: Commit files
         run: git commit -m "[auto commit] Version bumped for ${{ github.event.release.tag_name }}" -a
