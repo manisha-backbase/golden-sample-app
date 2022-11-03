@@ -5,6 +5,7 @@ categories:
   - title: 'Fixed'
     labels:
       - 'bug'
+      - 'fix'
   - title: 'Changed'
     labels:
       - 'maintenance'
