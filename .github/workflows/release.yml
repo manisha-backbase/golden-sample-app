@@ -44,6 +44,9 @@ jobs:
           release-notes: ${{ github.event.release.body }}
           path-to-changelog: 'libs/${{ steps.set-project-from-tag.outputs.module }}/CHANGELOG.md'
       
+      - name: Build and publish
+        run: npm run build && cd dist/libs/${{ steps.set-project-from-tag.outputs.module }} && npm publish
+
       - name: Commit files
         run: git commit -m "[auto commit] Version bumped for ${{ github.event.release.tag_name }}" -a
       
