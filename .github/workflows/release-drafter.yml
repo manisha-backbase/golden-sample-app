@@ -31,16 +31,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update_release_draft-transfer:
-      permissions:
-        contents: write
-        pull-requests: write
-      runs-on: ubuntu-latest
-      steps:
-        - uses: release-drafter/release-drafter@v5
-          with:
-            config-name: release-drafter-transfer.yml
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-transfer.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update-angular-tag:
     runs-on: ubuntu-latest
