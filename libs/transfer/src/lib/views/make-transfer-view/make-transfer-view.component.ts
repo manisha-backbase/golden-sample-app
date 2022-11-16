@@ -19,6 +19,7 @@ export class MakeTransferViewComponent {
   );
 
   submitTransfer(transfer: Transfer | undefined): void {
+    console.log("123");
     if (transfer !== undefined) {
       this.transferStore.next(transfer);
       this.router.navigate(['../make-transfer-summary'], {
