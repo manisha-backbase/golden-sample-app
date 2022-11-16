@@ -24,7 +24,15 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - uses: dorny/paths-filter@v2
+        id: changes-transactions
+        with:
+          filters: |
+            lib:
+              - 'libs/transactions/**'
+
       - uses: release-drafter/release-drafter@v5
+        if: steps.changes-transactions.outputs.lib== 'true'
         with:
           config-name: release-drafter-transactions.yml
         env:
@@ -36,7 +44,15 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - uses: dorny/paths-filter@v2
+        id: changes-transfer
+        with:
+          filters: |
+            lib:
+              - 'libs/transfer/**'
+
       - uses: release-drafter/release-drafter@v5
+        if: steps.changes-transfer.outputs.lib== 'true'
         with:
           config-name: release-drafter-transfer.yml
         env:
