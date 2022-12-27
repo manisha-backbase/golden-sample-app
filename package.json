@@ -76,7 +76,7 @@
     "@nrwl/eslint-plugin-nx": "13.10.3",
     "@nrwl/jest": "13.10.3",
     "@nrwl/linter": "13.10.3",
-    "@nrwl/tao": "12.10.1",
+    "@nrwl/tao": "15.4.2",
     "@nrwl/workspace": "^13.10.3",
     "@playwright/test": "^1.18.1",
     "@types/jest": "^27.4.0",
