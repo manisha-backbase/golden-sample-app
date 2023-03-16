@@ -16,6 +16,7 @@ export class MakeTransferSummaryComponent {
   }
 
   close(): void {
+    console.log("Hii");
     this.closeTransfer.emit();
   }
 }
