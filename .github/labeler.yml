@@ -1,0 +1,5 @@
+transactions:
+- libs/transactions/**/*
+
+transfer:
+- libs/transfer/**/*

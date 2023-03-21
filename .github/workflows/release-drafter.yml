@@ -3,7 +3,7 @@ name: Release Drafter
 on:
   push:
     branches:
-      - fix/release-monorepo
+      - main
 
   pull_request:
     types: [opened, reopened, synchronize]
@@ -18,60 +18,14 @@ jobs:
   #     if: github.repository_owner != 'Backbase'
   #     run: exit 1
 
-  update_release_draft-transactions:
+  update_release_draft:
     permissions:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: dorny/paths-filter@v2
-        id: changes-transactions
-        with:
-          filters: |
-            lib:
-              - 'libs/transactions/**'
-
       - uses: release-drafter/release-drafter@v5
-        if: steps.changes-transactions.outputs.lib== 'true'
         with:
-          config-name: release-drafter-transactions.yml
+          config-name: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  update_release_draft-transfer:
-    permissions:
-      contents: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: dorny/paths-filter@v2
-        id: changes-transfer
-        with:
-          filters: |
-            lib:
-              - 'libs/transfer/**'
-
-      - uses: release-drafter/release-drafter@v5
-        if: steps.changes-transfer.outputs.lib== 'true'
-        with:
-          config-name: release-drafter-transfer.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  update-angular-tag:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-
-      - name: Get Angular version
-        id: get-angular-version
-        run: |
-          version=$(node -p "require('./package-lock.json').dependencies['@angular/core'].version.split('.').shift()")
-          echo "::set-output name=version::$version"
-
-      - name: Update tag
-        run: |
-          tag='angular@v${{ steps.get-angular-version.outputs.version }}'
-          git tag $tag -f
-          git push origin $tag -f
