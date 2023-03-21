@@ -25,7 +25,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    if: ${{ github.event.label.name == 'transactions' }}
+    if: contains(github.event.pull_request.labels.*.name, 'transactions')
     runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v5
@@ -38,7 +38,7 @@ jobs:
       permissions:
         contents: write
         pull-requests: write
-      if: ${{ github.event.label.name == 'transfer' }}
+      if: contains(github.event.pull_request.labels.*.name, 'transfer')
       runs-on: ubuntu-latest
       steps:
         - uses: release-drafter/release-drafter@v5
