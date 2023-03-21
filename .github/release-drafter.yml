@@ -27,7 +27,7 @@ version-resolver:
       - 'patch'
   default: patch
     
-template: |
-  {{#each release.commits }}
-  - {{#if this.hash }} {{ this.hash.substring(0, 7) }}: {{/if}}{{ this.subject }} {{#if this.author}}(@{{ this.author.name }}){{/if}}
-  {{/each}}
+template: |-
+  {% for commit in commits %}
+  - {{ commit.message }} ({{ commit.author.name }}, {{ commit.date }} - {{ commit.hash|truncate(7, True, '') }})
+  {% endfor %}
