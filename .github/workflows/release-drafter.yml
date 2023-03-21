@@ -6,7 +6,7 @@ on:
       - main
 
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, labeled]
   
   workflow_run:
     workflows: ["labeler.yml"]
@@ -31,6 +31,7 @@ jobs:
       - uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter-transactions.yml
+          commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -44,5 +45,6 @@ jobs:
         - uses: release-drafter/release-drafter@v5
           with:
             config-name: release-drafter-transfer.yml
+            commitish: main
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
