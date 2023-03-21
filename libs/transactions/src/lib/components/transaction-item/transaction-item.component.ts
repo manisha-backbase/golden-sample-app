@@ -40,7 +40,7 @@ export class TransactionItemComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("changes1234");
+    console.log("changes12334");
     if (changes['transaction']) {
       this.amount = Number(
         this.transaction.transactionAmountCurrency.amount ?? 0
