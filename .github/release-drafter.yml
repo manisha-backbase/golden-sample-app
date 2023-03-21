@@ -5,6 +5,7 @@ categories:
   - title: 'Fixed'
     labels:
       - 'bug'
+      - 'fix'
   - title: 'Changed'
     labels:
       - 'maintenance'
@@ -45,13 +46,15 @@ autolabeler:
   - label: 'patch'
     title:
       - '/patch/i'
-      
+  - label: 'patch'
+    title:
+      - '/patch/i'
     
 template: |
   ## Changes
-
-  $CHANGES
-
-  ## Contributors
-
-  Thanks to $CONTRIBUTORS for your contributions to this release!
+  {%- for group in commits|groupby('library') %}
+  ### {{ group.grouper }}
+  {% for commit in group.list -%}
+  - {{ commit.message }}
+  {% endfor %}
+  {%- endfor %}

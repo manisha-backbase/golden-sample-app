@@ -21,6 +21,7 @@ export class MakeTransferViewComponent {
   );
 
   submitTransfer(transfer: Transfer | undefined): void {
+    console.log("123");
     if (transfer !== undefined) {
       this.tracker?.publish(new TransferSubmitEvent({}));
       this.transferStore.next(transfer);
