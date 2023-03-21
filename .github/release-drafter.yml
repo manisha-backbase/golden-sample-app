@@ -26,9 +26,33 @@ version-resolver:
     labels:
       - 'patch'
   default: patch
+autolabeler:
+  - label: 'bug'
+    branch:
+      - '/fix\/.+/'
+    title:
+      - '/fix/i'
+  - label: 'enhancement'
+    branch:
+      - '/feature\/.+/'
+    body:
+      - '/WF-[0-9]{1,4}/'
+  - label: 'major'
+    title:
+      - '/major/i'
+  - label: 'minor'
+    title:
+      - '/minor/i'
+  - label: 'patch'
+    title:
+      - '/patch/i'
+      
     
-template: |-
-  {% for commit in $commits %}
-  - {{ commit.message }} ({{ commit.author.name }}, {{ commit.date }}}})
-  {% endfor %}
+template: |
+  ## Changes
+
   $CHANGES
+
+  ## Contributors
+
+  Thanks to $CONTRIBUTORS for your contributions to this release!
