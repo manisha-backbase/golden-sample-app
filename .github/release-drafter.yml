@@ -51,7 +51,6 @@ autolabeler:
       - '/patch/i'
     
 template: |
-  ## Changes
   {%- for group in commits|groupby('library') %}
   ### {{ group.grouper }}
   {% for commit in group.list -%}
