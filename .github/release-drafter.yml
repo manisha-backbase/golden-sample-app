@@ -26,35 +26,8 @@ version-resolver:
     labels:
       - 'patch'
   default: patch
-autolabeler:
-  - label: 'bug'
-    branch:
-      - '/fix\/.+/'
-    title:
-      - '/fix/i'
-  - label: 'enhancement'
-    branch:
-      - '/feature\/.+/'
-    body:
-      - '/WF-[0-9]{1,4}/'
-  - label: 'major'
-    title:
-      - '/major/i'
-  - label: 'minor'
-    title:
-      - '/minor/i'
-  - label: 'patch'
-    title:
-      - '/patch/i'
-  - label: 'patch'
-    title:
-      - '/patch/i'
     
 template: |
-  ## Changes
-  {%- for group in commits|groupby('library') %}
-  ### {{ group.grouper }}
-  {% for commit in group.list -%}
-  - {{ commit.message }}
-  {% endfor %}
-  {%- endfor %}
+  {{#each release.commits }}
+  - {{#if this.hash }} {{ this.hash.substring(0, 7) }}: {{/if}}{{ this.subject }} {{#if this.author}}(@{{ this.author.name }}){{/if}}
+  {{/each}}
