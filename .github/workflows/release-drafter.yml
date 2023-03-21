@@ -3,10 +3,7 @@ name: Release Drafter
 on:
   push:
     branches:
-      - fix/release-drafter1
-
-  pull_request:
-    types: [opened, reopened, synchronize]
+      - fix/testing-monorepo-release
 
   pull_request:
     types: [opened, reopened, synchronize]
