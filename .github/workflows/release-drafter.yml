@@ -3,7 +3,7 @@ name: Release Drafter
 on:
   push:
     branches:
-      - fix/testing-monorepo-release
+      - main
 jobs:
   # correct_repository:
   #   runs-on: ubuntu-latest
