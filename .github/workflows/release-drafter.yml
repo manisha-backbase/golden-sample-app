@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - fix/testing-monorepo-release
-
-  pull_request:
-    types: [opened, reopened, synchronize]
-
-  workflow_dispatch:
-
 jobs:
   # correct_repository:
   #   runs-on: ubuntu-latest
