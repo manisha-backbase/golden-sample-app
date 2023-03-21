@@ -26,29 +26,6 @@ version-resolver:
     labels:
       - 'patch'
   default: patch
-autolabeler:
-  - label: 'bug'
-    branch:
-      - '/fix\/.+/'
-    title:
-      - '/fix/i'
-  - label: 'enhancement'
-    branch:
-      - '/feature\/.+/'
-    body:
-      - '/WF-[0-9]{1,4}/'
-  - label: 'major'
-    title:
-      - '/major/i'
-  - label: 'minor'
-    title:
-      - '/minor/i'
-  - label: 'patch'
-    title:
-      - '/patch/i'
-  - label: 'patch'
-    title:
-      - '/patch/i'
     
 template: |
   {{#each release.commits }}
