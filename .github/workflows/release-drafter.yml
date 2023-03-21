@@ -8,10 +8,10 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, labeled]
   
-  workflow_run:
-    workflows: ["labeler.yml"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["labeler.yml"]
+  #   types:
+  #     - completed
 
 jobs:
   # correct_repository:
