@@ -35,6 +35,7 @@ export class MakeTransferSummaryViewComponent implements OnDestroy {
     });
 
   submit(): void {
+    console.log("Hii");
     this.transferStore.makeTransfer();
   }
 
