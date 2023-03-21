@@ -1,25 +1,32 @@
 import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
 import { Subject, Subscription } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
+import { LocalesService } from '../../locale-selector/locales.service';
 import { AuthEventsHandlerService } from './auth-events-handler.service';
 
 export type WidePropertyTypes<T> = Partial<Record<keyof T, unknown>>;
 export const mock = <T>(overrides?: WidePropertyTypes<T>) =>
   ({ ...overrides } as jest.Mocked<T>);
+
 describe('AuthEventsHandlerService', () => {
   const getInstance = () => {
     const events$$ = new Subject<OAuthEvent>();
     const oAuthService = mock<OAuthService>({
       events: events$$.asObservable(),
       refreshToken: jest.fn(),
-      revokeTokenAndLogout: jest.fn(),
+      logOut: jest.fn(),
       initLoginFlow: jest.fn(),
       hasValidAccessToken: jest.fn().mockReturnValue(true),
+      getAccessToken: jest.fn().mockReturnValue('1.eyJsb2NhbGUiOiAibmwifQ=='),
     });
-    const service = new AuthEventsHandlerService(oAuthService, 'en');
+    const localeService = mock<LocalesService>({
+      setLocale: jest.fn(),
+      currentLocale: 'en',
+    });
+    const service = new AuthEventsHandlerService(oAuthService, localeService);
     const scheduler = new TestScheduler((a, e) => expect(a).toEqual(e));
 
-    return { service, oAuthService, events$$, scheduler };
+    return { service, oAuthService, localeService, events$$, scheduler };
   };
 
   describe('Document load', () => {
@@ -46,6 +53,20 @@ describe('AuthEventsHandlerService', () => {
     });
   });
 
+  describe('Receiving a new token', () => {
+    it('should update the locale when a new token is received', () => {
+      const { events$$, localeService, scheduler } = getInstance();
+
+      scheduler.run(({ flush }) => {
+        events$$.next({ type: 'discovery_document_loaded' });
+        events$$.next({ type: 'token_received' });
+        flush();
+      });
+
+      expect(localeService.setLocale).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('Refreshing access tokens', () => {
     it('should refresh an access token that expires', () => {
       const { events$$, oAuthService, scheduler } = getInstance();
@@ -60,8 +81,8 @@ describe('AuthEventsHandlerService', () => {
     });
   });
 
-  describe('Revoking tokens and logging out', () => {
-    it('should revoke tokens and log out the user when refresh token errors', () => {
+  describe('Logging out', () => {
+    it('should log out the user when refresh token errors', () => {
       const { events$$, oAuthService, scheduler } = getInstance();
 
       scheduler.run(({ flush }) => {
@@ -70,9 +91,9 @@ describe('AuthEventsHandlerService', () => {
         flush();
       });
 
-      expect(oAuthService.revokeTokenAndLogout).toHaveBeenCalledTimes(1);
+      expect(oAuthService.logOut).toHaveBeenCalledTimes(1);
     });
-    it('should revoke tokens and log out the user when token errors', () => {
+    it('should log out the user when token errors', () => {
       const { events$$, oAuthService, scheduler } = getInstance();
 
       scheduler.run(({ flush }) => {
@@ -81,9 +102,9 @@ describe('AuthEventsHandlerService', () => {
         flush();
       });
 
-      expect(oAuthService.revokeTokenAndLogout).toHaveBeenCalledTimes(1);
+      expect(oAuthService.logOut).toHaveBeenCalledTimes(1);
     });
-    it('should revoke tokens and log out the user when code exchange errors', () => {
+    it('should log out the user when code exchange errors', () => {
       const { events$$, oAuthService, scheduler } = getInstance();
 
       scheduler.run(({ flush }) => {
@@ -92,9 +113,9 @@ describe('AuthEventsHandlerService', () => {
         flush();
       });
 
-      expect(oAuthService.revokeTokenAndLogout).toHaveBeenCalledTimes(1);
+      expect(oAuthService.logOut).toHaveBeenCalledTimes(1);
     });
-    it('should revoke tokens and log out the user when the session errors', () => {
+    it('should log out the user when the session errors', () => {
       const { events$$, oAuthService, scheduler } = getInstance();
 
       scheduler.run(({ flush }) => {
@@ -103,9 +124,9 @@ describe('AuthEventsHandlerService', () => {
         flush();
       });
 
-      expect(oAuthService.revokeTokenAndLogout).toHaveBeenCalledTimes(1);
+      expect(oAuthService.logOut).toHaveBeenCalledTimes(1);
     });
-    it('should revoke tokens and log out the user when the session is terminated', () => {
+    it('should log out the user when the session is terminated', () => {
       const { events$$, oAuthService, scheduler } = getInstance();
 
       scheduler.run(({ flush }) => {
@@ -114,7 +135,7 @@ describe('AuthEventsHandlerService', () => {
         flush();
       });
 
-      expect(oAuthService.revokeTokenAndLogout).toHaveBeenCalledTimes(1);
+      expect(oAuthService.logOut).toHaveBeenCalledTimes(1);
     });
     it('should call initLoginFlow when the user does not have a valid access token', () => {
       const { events$$, oAuthService, scheduler } = getInstance();

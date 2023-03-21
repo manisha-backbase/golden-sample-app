@@ -1,7 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { EntitlementsGuard } from '@backbase/foundation-ang/entitlements';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard } from './auth/guard/auth.guard';
+import { ViewWrapperComponent } from './components/view-wrapper/view-wrapper.component';
 import { triplets } from './services/entitlementsTriplets';
 import { UserContextGuard } from './user-context/user-context.guard';
 
@@ -74,14 +76,25 @@ const routes: Routes = [
     canActivate: [AuthGuard, UserContextGuard],
   },
   {
+    path: 'transfer-internal',
+    component: ViewWrapperComponent,
+    loadChildren: () =>
+      import('./custom-payment/initiate-payment-journey-bundle.module').then(
+        (m) => m.CustomPaymentJourneyBundleModule
+      ),
+    canActivate: [AuthGuard, UserContextGuard],
+  },
+  {
     path: '**',
     pathMatch: 'full',
-    redirectTo: 'error',
+    loadChildren: () =>
+      import('./error-page/error-page.module').then((m) => m.ErrorPageModule),
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  declarations: [ViewWrapperComponent],
+  imports: [RouterModule.forRoot(routes), CommonModule],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

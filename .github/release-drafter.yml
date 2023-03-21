@@ -49,7 +49,6 @@ autolabeler:
   - label: 'patch'
     title:
       - '/patch/i'
-
     
 template: |
   ## Changes

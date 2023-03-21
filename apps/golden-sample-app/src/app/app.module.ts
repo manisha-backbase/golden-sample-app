@@ -11,6 +11,11 @@ import {
   ENTITLEMENTS_CONFIG,
 } from '@backbase/foundation-ang/entitlements';
 import { AuthService, IdentityAuthModule } from '@backbase/identity-auth';
+import { TransactionSigningModule } from '@backbase/identity-auth/transaction-signing';
+import {
+  INITIATE_PAYMENT_JOURNEY_CONTACT_MANAGER_BASE_PATH,
+  INITIATE_PAYMENT_JOURNEY_PAYMENT_ORDER_BASE_PATH,
+} from '@backbase/initiate-payment-journey-ang';
 import { AvatarModule } from '@backbase/ui-ang/avatar';
 import { ButtonModule } from '@backbase/ui-ang/button';
 import { DropdownMenuModule } from '@backbase/ui-ang/dropdown-menu';
@@ -32,9 +37,13 @@ import { authConfig, environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppErrorHandler } from './app.error-handler';
-import { AuthEventsHandlerService } from './auth/auth-events-handler.service';
-import { AuthInterceptor } from './auth/auth.interceptor';
+import { AuthEventsHandlerService } from './auth/auth-events-handler/auth-events-handler.service';
+import { AnalyticsService } from './services/analytics.service';
+import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { LocaleSelectorModule } from './locale-selector/locale-selector.module';
+import { TrackerModule } from '@backbase/foundation-ang/observability';
+import { UserContextInterceptor } from './user-context/user-context.interceptor';
+import { ActivityMonitorModule } from './auth/activity-monitor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -58,6 +67,11 @@ import { LocaleSelectorModule } from './locale-selector/locale-selector.module';
     }),
     ButtonModule,
     IdentityAuthModule,
+    TransactionSigningModule,
+    TrackerModule.forRoot({
+      handler: AnalyticsService,
+    }),
+    ActivityMonitorModule,
   ],
   providers: [
     ...(environment.mockProviders || []),
@@ -65,6 +79,11 @@ import { LocaleSelectorModule } from './locale-selector/locale-selector.module';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UserContextInterceptor,
       multi: true,
     },
     {
@@ -114,6 +133,14 @@ import { LocaleSelectorModule } from './locale-selector/locale-selector.module';
     {
       provide: ACCESS_CONTROL_BASE_PATH,
       useValue: environment.apiRoot + '/access-control',
+    },
+    {
+      provide: INITIATE_PAYMENT_JOURNEY_PAYMENT_ORDER_BASE_PATH,
+      useValue: environment.apiRoot + '/payment-order-service',
+    },
+    {
+      provide: INITIATE_PAYMENT_JOURNEY_CONTACT_MANAGER_BASE_PATH,
+      useValue: environment.apiRoot + '/contact-manager',
     },
     {
       provide: ENTITLEMENTS_CONFIG,

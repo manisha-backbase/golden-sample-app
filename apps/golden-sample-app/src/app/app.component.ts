@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Optional } from '@angular/core';
 import { LayoutService } from '@backbase/ui-ang/layout';
 import { triplets } from './services/entitlementsTriplets';
 import { OAuthService } from 'angular-oauth2-oidc';
+import {
+  LogoutTrackerEvent,
+  Tracker,
+} from '@backbase/foundation-ang/observability';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +18,14 @@ export class AppComponent {
 
   constructor(
     private oAuthService: OAuthService,
-    public layoutService: LayoutService
+    public layoutService: LayoutService,
+    @Optional() private readonly tracker?: Tracker
   ) {
     this.isAuthenticated = oAuthService.hasValidAccessToken();
   }
 
   logout(): void {
+    this.tracker?.publish(new LogoutTrackerEvent());
     this.oAuthService.logOut(true);
   }
 

@@ -24,10 +24,6 @@ This golden sample provides examples of the code structure, configuration, and b
   - [Experimental branches](#experimental-branches)
   - [Further help](#further-help)
 
-
-
-
-
 ## Overview of the app
 This project is a complete reference implementation for building a new Angular single page application(SPA) with Backbase components and libraries.  It includes best practices that front-end developers can use to build their own web applications.
 
@@ -52,6 +48,8 @@ The project uses the latest versions of the tools and libraries.
       - Do not forget, that communication service from the application level should be provided to the journeys modules in the bundle files (to avoid breaking lazy loading). Check the [`transactions-journey-bundle.module.ts`](https://github.com/Backbase/golden-sample-app/blob/master/apps/golden-sample-app/src/app/transactions/transactions-journey-bundle.module.ts)
     - The general explanation of the communication service idea and  its theoretical underlying can be found in [Understand communication between journeys](https://community.backbase.com/documentation/foundation_angular/latest/communicate_between_journeys)
   - Simple examples of journeys such as [transactions](https://github.com/Backbase/golden-sample-app/tree/master/libs/transactions) and [transfer](https://github.com/Backbase/golden-sample-app/tree/master/libs/transfer)
+  - [How to](./apps/golden-sample-app/src/app/custom-payment/README.md) add a custom component to Initiate Payments Journey
+  - Analytics: Integrate Analytics in your application or journey using @backbase/foundation-ang@8.0.0. Check the detailed documentation [here](https://community.backbase.com/documentation/foundation_angular/latest/analytics-tracker-web)
 
 ## Prerequisites
 - Install the following VSCode extensions:  
@@ -62,7 +60,21 @@ The project uses the latest versions of the tools and libraries.
 
 - For AWS environments with specific WAF configurations, you may need to use `http://0.0.0.0:4200/` when accessing the app locally, in order to successfully authenticate.
 
+- For you local development, setup backbase npm registry using the following commands:
+  
+  - Run the following command in your npm client. When prompted, provide your Artifactory login credentials and email:
+      ```
+        npm adduser --registry=https://repo.backbase.com/api/npm/npm-backbase/ --always-auth --scope=@backbase
+      ``` 
+    This will set your npm client to get all the packages belonging to @backbase scope from the registry specified above.
+     
+  - As a result of this command you can expect your npm client configuration file: ~/.npmrc file (in Windows %USERPROFILE%/.npmrc) to have following content:
+      ```
+        @backbase:registry=https://repo.backbase.com/api/npm/npm-backbase/
+        //repo.backbase.com/api/npm/npm-backbase/:_authToken=<YOUR_UNIQUE_AUTHENTICATION_TOKEN>     
+      ``` 
 
+      
 
 ## Authentication
 

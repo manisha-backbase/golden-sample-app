@@ -1,6 +1,21 @@
-import { Inject, Injectable, LOCALE_ID, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Optional } from '@angular/core';
 import { OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
 import { Subscription } from 'rxjs';
+import {
+  Tracker,
+  SessionTimeoutTrackerEvent,
+} from '@backbase/foundation-ang/observability';
+import { LocalesService } from '../../locale-selector/locales.service';
+
+function parseJwt(token: string): { locale: string } | undefined {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(base64));
+  } catch (e) {
+    return undefined;
+  }
+}
 
 @Injectable({
   providedIn: 'root',
@@ -8,10 +23,11 @@ import { Subscription } from 'rxjs';
 export class AuthEventsHandlerService implements OnDestroy {
   private eventsSubscription: Subscription;
   private documentLoaded = false;
+
   constructor(
     private readonly oAuthService: OAuthService,
-    @Inject(LOCALE_ID)
-    private readonly locale: string
+    private readonly localesService: LocalesService,
+    @Optional() private readonly tracker?: Tracker
   ) {
     this.eventsSubscription = this.getEventsSubscription();
   }
@@ -37,10 +53,17 @@ export class AuthEventsHandlerService implements OnDestroy {
           case 'discovery_document_loaded':
             this.documentLoaded = true;
             break;
+
+          // Handle locale changes when the user logs in.
+          case 'token_received':
+            this.updateLocale();
+            break;
+
           // Expired access tokens are automatically refreshed.
           case 'token_expires':
             this.oAuthService.refreshToken();
             break;
+
           // Any authentication failure is treated as a terminal auth issue and the user is logged out.
           case 'token_refresh_error':
           case 'token_error':
@@ -49,11 +72,12 @@ export class AuthEventsHandlerService implements OnDestroy {
           case 'session_terminated':
             this.handleTerminatedSession();
             break;
+
           // Invalid login process is treated as a threat and the user is returned to the login page.
           // As the user is already logged in on the Auth server, they should just be navigated back to the app.
           case 'invalid_nonce_in_state':
             this.oAuthService.initLoginFlow(undefined, {
-              ui_locales: this.locale,
+              ui_locales: this.localesService.currentLocale,
             });
             break;
         }
@@ -70,10 +94,23 @@ export class AuthEventsHandlerService implements OnDestroy {
    * If not, treat them as already logged out and redirect them to their login page.
    */
   private handleTerminatedSession() {
+    this.tracker?.publish(new SessionTimeoutTrackerEvent());
     if (this.oAuthService.hasValidAccessToken()) {
-      this.oAuthService.revokeTokenAndLogout();
+      this.oAuthService.logOut();
     } else {
-      this.oAuthService.initLoginFlow(undefined, { ui_locales: this.locale });
+      this.oAuthService.initLoginFlow(undefined, {
+        ui_locales: this.localesService.currentLocale,
+      });
+    }
+  }
+
+  /**
+   * Verifies the app's locale matches the authorization user locale.
+   */
+  private updateLocale() {
+    const token = parseJwt(this.oAuthService.getAccessToken());
+    if (token) {
+      this.localesService.setLocale(token.locale);
     }
   }
 }

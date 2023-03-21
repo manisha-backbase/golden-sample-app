@@ -1,6 +1,6 @@
 {
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "root": "apps/golden-sample-app",
   "sourceRoot": "apps/golden-sample-app/src",
   "prefix": "bb",
   "i18n": {
@@ -11,9 +11,9 @@
     }
   },
   "tags": ["type:app"],
-  "architect": {
+  "targets": {
     "build": {
-      "builder": "@angular-devkit/build-angular:browser",
+      "executor": "@angular-devkit/build-angular:browser",
       "options": {
         "outputPath": "dist/apps/golden-sample-app",
         "index": "apps/golden-sample-app/src/index.html",
@@ -30,6 +30,14 @@
       "configurations": {
         "production": {
           "baseHref": "${BASE_HREF::-1}",
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            },
+            "fonts": true
+          },
           "budgets": [
             {
               "type": "initial",
@@ -72,24 +80,22 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "builder": "@angular-devkit/build-angular:dev-server",
+      "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "development": {
-          "browserTarget": "golden-sample-app:build:development",
-          "proxyConfig": "./proxy.conf.json"
+          "browserTarget": "golden-sample-app:build:development"
         },
         "production": {
           "browserTarget": "golden-sample-app:build:production"
         },
         "nl": {
-          "browserTarget": "golden-sample-app:build:nl",
-          "proxyConfig": "./proxy.conf.json"
+          "browserTarget": "golden-sample-app:build:nl"
         }
       },
       "defaultConfiguration": "development"
     },
     "e2e": {
-      "builder": "@dot-build/serve-and-run-angular:run",
+      "executor": "@dot-build/serve-and-run-angular:run",
       "options": {
         "devServerTarget": "golden-sample-app:serve",
         "command": "npx",
@@ -100,13 +106,13 @@
       }
     },
     "extract-i18n": {
-      "builder": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
         "browserTarget": "golden-sample-app:build"
       }
     },
     "lint": {
-      "builder": "@nrwl/linter:eslint",
+      "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": [
           "apps/golden-sample-app/src/**/*.ts",
@@ -115,9 +121,9 @@
       }
     },
     "test": {
-      "builder": "@nrwl/jest:jest",
+      "executor": "@nrwl/jest:jest",
       "options": {
-        "jestConfig": "apps/golden-sample-app/jest.config.js",
+        "jestConfig": "apps/golden-sample-app/jest.config.ts",
         "passWithNoTests": true
       }
     }
