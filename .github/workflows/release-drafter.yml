@@ -6,7 +6,10 @@ on:
       - main
 
   pull_request:
-    types: [opened, reopened, synchronize, labeled]
+    types: [opened, reopened, synchronize]
+  
+  label:
+    types: [created]
 
 jobs:
   # correct_repository:
