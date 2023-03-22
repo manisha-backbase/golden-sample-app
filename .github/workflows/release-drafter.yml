@@ -73,8 +73,7 @@ jobs:
             repo: context.repo.repo,
             issue_number: ${{steps.get_issue_number.outputs.result}}
             })
-            const labels1 = labels.map(label => label.name).join(', ');
-            console.log(`The labels on PR are: ${labels1}`);
+            const labels1 = labels.map(label => label.name);
             echo "libraries=$labels1" >> $GITHUB_OUTPUT
    
   update_release_draft:
@@ -82,7 +81,7 @@ jobs:
     needs: get_labels
     strategy:
       matrix:
-        libraries: ${{steps.get_labels.outputs.result}}
+        libraries: ${{ fromJson(needs.get_labels.outputs.libraries) }}
     permissions:
       contents: write
       pull-requests: write
