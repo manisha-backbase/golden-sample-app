@@ -31,21 +31,20 @@ jobs:
   get_labels:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
 
       - name: Get Labels
+        if: github.event_name == 'push'
         uses: actions/github-script@v4
         with:
           script: |
-            const prNumber = context.payload.pull_request.number;
-            const octokit = github.getOctokit(${{ secrets.GITHUB_TOKEN }});
-            const { data: labels } = await octokit.issues.listLabelsOnIssue({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber
-            });
-            console.log(labels.map(label => label.name).join(', '));
+            const { data: labels } = await github.issues.listLabelsOnIssue({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number
+            })
+          console.log(`Labels: ${labels.map(label => label.name).join(', ')}`)
 
   update_release_draft-transactions:
     permissions:
