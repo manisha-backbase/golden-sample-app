@@ -57,6 +57,7 @@
     "angular-oauth2-oidc": "^14.0.1",
     "bignumber.js": "^9.1.1",
     "bootstrap": "~5.2.0",
+    "js-yaml": "^4.1.0",
     "ngx-cookie-service": "^14.0.1",
     "ngx-mask": "^13.1.15",
     "ngx-quill": "^16.2.1",
