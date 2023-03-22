@@ -80,23 +80,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Generate config file
         uses: actions/github-script@v4
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const yaml = require('js-yaml');
             const fs = require('fs');
-
             const config = {
               _extends: golden-sample-app:.github/release-drafter.yml
               name-template: 'transactions@v$RESOLVED_VERSION'
               tag-template: 'transactions@v$RESOLVED_VERSION'
               tag-prefix: transactions@v
               include-paths: 'libs/transactions/'
-            };
-            
-            const yamlString = yaml.dump(config);
-            
+            };            
+            const yamlString = yaml.dump(config);          
             fs.writeFileSync('.github/config.yml', yamlString);
   update_release_draft:
     if: github.event_name == 'push'
