@@ -28,8 +28,7 @@ jobs:
         script: |
           const { data: labels } = await github.issues.listLabelsOnIssue({
             owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number
+            repo: context.repo.repo
           })
           console.log(`Labels: ${labels.map(label => label.name).join(', ')}`)
   update_release_draft-transactions:
