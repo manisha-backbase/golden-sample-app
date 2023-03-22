@@ -69,10 +69,10 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: ${{steps.get_issue_number.outputs.result}}
-            });
-            const x = ${labels.map(label => label.name).join(', ')};
-            echo '$x'
-      
+            })
+            const labels1 = labels.map(label => label.name).join(', ');
+            console.log(`The labels on PR are: ${labels1}`);
+   
   update_release_draft-transactions:
     permissions:
       contents: write
