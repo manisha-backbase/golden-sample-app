@@ -46,7 +46,7 @@ jobs:
               issue_number: prNumber
             });
             console.log(labels.map(label => label.name).join(', '));
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   update_release_draft-transactions:
     permissions:
