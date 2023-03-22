@@ -73,8 +73,7 @@ jobs:
             repo: context.repo.repo,
             issue_number: ${{steps.get_issue_number.outputs.result}}
             })
-            const labels1 = labels.map(label => label.name)
-            echo "libraries=$labels1" >> $GITHUB_OUTPUT
+            console.log(`::set-output name=libraries::${labels1}`)
    
   update_release_draft:
     if: github.event_name == 'push'
