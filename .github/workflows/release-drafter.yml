@@ -7,10 +7,10 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
         
-  workflow_run:
-    workflows: ["labeler.yml"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["labeler.yml"]
+  #   types:
+  #     - completed
 
 jobs:
   # correct_repository:
@@ -62,6 +62,7 @@ jobs:
       
       - name: Get Labels
         if: github.event_name == 'push'
+        id: get_labels
         uses: actions/github-script@v4
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,31 +75,37 @@ jobs:
             })
             const labels1 = labels.map(label => label.name).join(', ');
             console.log(`The labels on PR are: ${labels1}`);
+            echo "libraries=$labels1" >> $GITHUB_OUTPUT
    
-  update_release_draft-transactions:
+  update_release_draft:
+    if: github.event_name == 'push'
+    strategy:
+      matrix:
+        libraries: ${{steps.get_labels.outputs.result}}
     permissions:
       contents: write
       pull-requests: write
-    if: contains(github.event.pull_request.labels.*.name, 'transactions')
     runs-on: ubuntu-latest
     steps:
       - uses: release-drafter/release-drafter@v5
         with:
-          config-name: release-drafter-transactions.yml
+          config-name: release-drafter.yml
           commitish: main
+          name-template: ${{ matrix.libraries }}
+          include-paths: lib/${{ matrix.libraries }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  update_release_draft-transfer:
-      permissions:
-        contents: write
-        pull-requests: write
-      if: contains(github.event.pull_request.labels.*.name, 'transfer')
-      runs-on: ubuntu-latest
-      steps:
-        - uses: release-drafter/release-drafter@v5
-          with:
-            config-name: release-drafter-transfer.yml
-            commitish: main
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # update_release_draft-transfer:
+  #     permissions:
+  #       contents: write
+  #       pull-requests: write
+  #     if: contains(github.event.pull_request.labels.*.name, 'transfer')
+  #     runs-on: ubuntu-latest
+  #     steps:
+  #       - uses: release-drafter/release-drafter@v5
+  #         with:
+  #           config-name: release-drafter-transfer.yml
+  #           commitish: main
+  #         env:
+  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
