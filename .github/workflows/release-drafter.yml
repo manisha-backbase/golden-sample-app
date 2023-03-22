@@ -80,7 +80,7 @@ jobs:
     needs: get_labels
     strategy:
       matrix:
-        libraries: ['transfer']
+        libraries: ['transactions']
     permissions:
       contents: write
       pull-requests: write
@@ -90,8 +90,7 @@ jobs:
         with:
           config-name: release-drafter.yml
           commitish: main
-          name-template: ${{ matrix.libraries }}
-          include-paths: lib/${{ matrix.libraries }}
+          name: ${{ matrix.libraries }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
