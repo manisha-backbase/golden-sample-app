@@ -6,6 +6,11 @@ on:
       - main
   pull_request:
     types: [opened, reopened, synchronize]
+    
+  workflow_run:
+    workflows: ["labeler.yml"]
+    types:
+      - completed
 
 jobs:
   # correct_repository:
