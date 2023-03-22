@@ -75,12 +75,35 @@ jobs:
             })
             const labels1 = labels.map(label => label.name)
             console.log(`::set-output name=libraries::${labels1}`);   
+  generate-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Generate config file
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const yaml = require('js-yaml');
+            const fs = require('fs');
+
+            const config = {
+              _extends: golden-sample-app:.github/release-drafter.yml
+              name-template: 'transactions@v$RESOLVED_VERSION'
+              tag-template: 'transactions@v$RESOLVED_VERSION'
+              tag-prefix: transactions@v
+              include-paths: 'libs/transactions/'
+            };
+            
+            const yamlString = yaml.dump(config);
+            
+            fs.writeFileSync('.github/config.yml', yamlString);
   update_release_draft:
     if: github.event_name == 'push'
-    needs: get_labels
-    strategy:
-      matrix:
-        libraries: ['transactions']
+    needs: generate-config
+    # strategy:
+    #   matrix:
+    #     libraries: ['transactions']
     permissions:
       contents: write
       pull-requests: write
@@ -88,9 +111,8 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@v5
         with:
-          config-name: release-drafter.yml
+          config-name: config.yml
           commitish: main
-          name: ${{ matrix.libraries }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
