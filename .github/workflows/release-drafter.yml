@@ -74,14 +74,13 @@ jobs:
             issue_number: ${{steps.get_issue_number.outputs.result}}
             })
             const labels1 = labels.map(label => label.name)
-            console.log(`::set-output name=libraries::${labels1}`);
-   
+            console.log(`::set-output name=libraries::${labels1}`);   
   update_release_draft:
     if: github.event_name == 'push'
     needs: get_labels
     strategy:
       matrix:
-        libraries: ${{ fromJson(needs.get_labels.outputs.libraries) }}
+        libraries: ['transfer']
     permissions:
       contents: write
       pull-requests: write
