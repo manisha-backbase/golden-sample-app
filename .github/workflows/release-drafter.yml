@@ -39,7 +39,7 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
-            const octokit = github.getOctokit(token);
+            const octokit = github.getOctokit(github-token);
             const { data: labels } = await octokit.issues.listLabelsOnIssue({
               owner: context.repo.owner,
               repo: context.repo.repo,
