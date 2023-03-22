@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   # correct_repository:
@@ -13,6 +15,18 @@ jobs:
   #     if: github.repository_owner != 'Backbase'
   #     run: exit 1
 
+  echo_labels:
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/github-script@v4
+      with:
+        script: |
+          const { data: labels } = await github.issues.listLabelsOnIssue({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number
+          })
+          console.log(`Labels: ${labels.map(label => label.name).join(', ')}`)
   update_release_draft-transactions:
     permissions:
       contents: write
