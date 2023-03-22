@@ -81,6 +81,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install js-yaml
+        run: npm install js-yaml
+        
       - name: Generate config file
         uses: actions/github-script@v4
         env: 
