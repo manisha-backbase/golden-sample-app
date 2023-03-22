@@ -32,8 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
 
       - name: Get Labels
         uses: actions/github-script@v6
@@ -62,15 +62,16 @@ jobs:
       
       - name: Get Labels
         if: github.event_name == 'push'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         with:
           script: |
             const { data: labels } = await github.issues.listLabelsOnIssue({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: ${{steps.get_issue_number.outputs.result}}
-            })
-          console.log(`Labels: ${labels.map(label => label.name).join(', ')}`)
+            });
+            const x = ${labels.map(label => label.name).join(', ')};
+            echo '$x'
       
   update_release_draft-transactions:
     permissions:
