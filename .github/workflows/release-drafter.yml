@@ -90,10 +90,10 @@ jobs:
             const yaml = require('js-yaml');
             const fs = require('fs');
             const config = {
-              _extends: 'golden-sample-app:.github/release-drafter.yml'
-              name-template: 'transactions@v$RESOLVED_VERSION'
-              tag-template: 'transactions@v$RESOLVED_VERSION'
-              tag-prefix: 'transactions@v'
+              _extends: 'golden-sample-app:.github/release-drafter.yml',
+              name-template: 'transactions@v$RESOLVED_VERSION',
+              tag-template: 'transactions@v$RESOLVED_VERSION',
+              tag-prefix: 'transactions@v',
               include-paths: 'libs/transactions/'
             };            
             const yamlString = yaml.dump(config);          
