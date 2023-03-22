@@ -20,13 +20,33 @@ jobs:
   #     if: github.repository_owner != 'Backbase'
   #     run: exit 1
 
-  echo_labels:
+  # echo_labels:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Debug issue number
+  #       run: |
+  #         x=${{ toJson(github.event.pull_request.labels.*.name) }}
+  #         echo $x
+
+  get_labels:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug issue number
-        run: |
-          x=${{ toJson(github.event.pull_request.labels.*.name) }}
-          echo $x
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Labels
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const octokit = github.getOctokit(token);
+            const { data: labels } = await octokit.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+            console.log(labels.map(label => label.name).join(', '));
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   update_release_draft-transactions:
     permissions:
