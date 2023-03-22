@@ -83,7 +83,9 @@ jobs:
 
       - name: Install js-yaml
         run: npm install js-yaml
-        
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Generate config file
         uses: actions/github-script@v4
         env: 
