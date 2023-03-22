@@ -1,3 +1,4 @@
+tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: 'Added'
     labels:
