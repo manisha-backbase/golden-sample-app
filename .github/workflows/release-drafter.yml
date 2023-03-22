@@ -22,17 +22,12 @@ jobs:
 
   echo_labels:
     runs-on: ubuntu-latest
-    steps: 
-    - uses: actions/github-script@v4
-      with:
-        script: |
-          const issueNumber = ${{ if: github.event.pull_request, then: github.event.pull_request.number, else: context.payload.pull_request.number || 0 }}
-          const { data: labels } = await github.issues.listLabelsOnIssue({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: issueNumber
-          })
-          console.log(`Labels: ${labels.map(label => label.name).join(', ')}`)
+    steps:
+      - name: Debug issue number
+        run: |
+          x=${{ toJson(github.event.pull_request.labels.*.name) }}
+          echo $x
+
   update_release_draft-transactions:
     permissions:
       contents: write
