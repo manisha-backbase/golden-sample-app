@@ -34,6 +34,10 @@ jobs:
       # - name: Checkout code
       #   uses: actions/checkout@v2
 
+      - name: Use pull request number
+        if: github.event_name == 'push'
+        run: echo "Pull request number is ${{ github.event.pull_request.number }}"
+
       - name: Get Labels
         if: github.event_name == 'push'
         uses: actions/github-script@v4
@@ -42,7 +46,7 @@ jobs:
             const { data: labels } = await github.issues.listLabelsOnIssue({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            issue_number: github.event.pull_request.number
+            issue_number: ${{ github.event.pull_request.number }}
             })
           console.log(`Labels: ${labels.map(label => label.name).join(', ')}`)
 
