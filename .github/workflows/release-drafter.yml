@@ -32,8 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Get Labels
         uses: actions/github-script@v6
@@ -62,7 +62,9 @@ jobs:
       
       - name: Get Labels
         if: github.event_name == 'push'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v4
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const { data: labels } = await github.issues.listLabelsOnIssue({
