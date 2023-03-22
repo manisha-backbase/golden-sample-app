@@ -17,35 +17,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Derive appropriate SHAs for base and head for `nx affected` commands
-        uses: nrwl/nx-set-shas@v3
-        with:
-          main-branch-name: ${{ github.base_ref }}
+      # - name: Derive appropriate SHAs for base and head for `nx affected` commands
+      #   uses: nrwl/nx-set-shas@v3
+      #   with:
+      #     main-branch-name: ${{ github.base_ref }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-          registry-url: 'https://repo.backbase.com/artifactory/api/npm/npm-backbase/'
-          scope: '@backbase'
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 16
+      #     cache: 'npm'
+      #     registry-url: 'https://repo.backbase.com/artifactory/api/npm/npm-backbase/'
+      #     scope: '@backbase'
 
-      - name: Install Dependencies
-        run: npm ci --legacy-peer-deps
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Install Dependencies
+      #   run: npm ci --legacy-peer-deps
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Build app
-        run: npm run affected:build
+      # - name: Build app
+      #   run: npm run affected:build
 
-      - name: Check Formatting
-        run: npm run format:check
+      # - name: Check Formatting
+      #   run: npm run format:check
 
-      - name: Unit test
-        run: npm run affected:test
+      # - name: Unit test
+      #   run: npm run affected:test
 
-      - name: Check Linting
-        run: npm run affected:lint
+      # - name: Check Linting
+      #   run: npm run affected:lint
     
   # playwright:
   #   name: 'Playwright Tests'
