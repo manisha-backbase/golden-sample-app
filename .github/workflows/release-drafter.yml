@@ -63,8 +63,6 @@ jobs:
       - name: Get Labels
         if: github.event_name == 'push'
         uses: actions/github-script@v4
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const { data: labels } = await github.issues.listLabelsOnIssue({
