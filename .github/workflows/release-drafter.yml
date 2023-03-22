@@ -39,14 +39,13 @@ jobs:
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
-            const octokit = github.getOctokit(github-token);
+            const octokit = github.getOctokit(${{ secrets.GITHUB_TOKEN }});
             const { data: labels } = await octokit.issues.listLabelsOnIssue({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber
             });
             console.log(labels.map(label => label.name).join(', '));
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   update_release_draft-transactions:
     permissions:
