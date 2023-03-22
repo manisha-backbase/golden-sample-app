@@ -79,6 +79,7 @@ jobs:
    
   update_release_draft:
     if: github.event_name == 'push'
+    needs: get_labels
     strategy:
       matrix:
         libraries: ${{steps.get_labels.outputs.result}}
