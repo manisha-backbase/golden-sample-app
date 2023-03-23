@@ -12,7 +12,7 @@ export class TransferJourneyComponent {
 
   public accountName: string = this.route.snapshot.params['accountName'];
 
-  public repeatMessage = $localize`:A message for Repeat Transfer1 Alert@@transfer.repeat.message:Making Repeated Transfer for ${this.accountName}`;
+  public repeatMessage = $localize`:A message for Repeat Transfer15 Alert@@transfer.repeat.message:Making Repeated Transfer for ${this.accountName}`;
 
   constructor(private route: ActivatedRoute) {}
 }
