@@ -6,19 +6,19 @@ categories:
   - title: Transfer
     labels:
     - 'transfer'
-  - title: 'Added'
-    labels:
-      - 'enhancement'
-  - title: 'Fixed'
-    labels:
-      - 'bug'
-      - 'fix'
-  - title: 'Changed'
-    labels:
-      - 'maintenance'
-  - title: 'Internal'
-    labels:
-      - 'internal'
+  # - title: 'Added'
+  #   labels:
+  #     - 'enhancement'
+  # - title: 'Fixed'
+  #   labels:
+  #     - 'bug'
+  #     - 'fix'
+  # - title: 'Changed'
+  #   labels:
+  #     - 'maintenance'
+  # - title: 'Internal'
+  #   labels:
+  #     - 'internal'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 version-resolver:
   major:
