@@ -1,18 +1,24 @@
 tag-template: 'v$RESOLVED_VERSION'
 categories:
-  - title: 'Added'
+  - title: Transacations
     labels:
-      - 'enhancement'
-  - title: 'Fixed'
+    - 'transacations'
+  - title: Transfer
     labels:
-      - 'bug'
-      - 'fix'
-  - title: 'Changed'
-    labels:
-      - 'maintenance'
-  - title: 'Internal'
-    labels:
-      - 'internal'
+    - 'transfer'
+  # - title: 'Added'
+  #   labels:
+  #     - 'enhancement'
+  # - title: 'Fixed'
+  #   labels:
+  #     - 'bug'
+  #     - 'fix'
+  # - title: 'Changed'
+  #   labels:
+  #     - 'maintenance'
+  # - title: 'Internal'
+  #   labels:
+  #     - 'internal'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 version-resolver:
   major:
