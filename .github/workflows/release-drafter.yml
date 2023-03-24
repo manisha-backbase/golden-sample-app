@@ -90,7 +90,7 @@ jobs:
           changes: |
             {
               ".github/release-drafter-transfer.yml": {
-                "['name-template']": "testing123",
+                "['name-template']": 'testing123',
                 "['tag-template']": 'testing123',
                 "['tag-prefix']": 'testing123'
               }
