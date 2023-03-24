@@ -85,6 +85,8 @@ jobs:
           createPR: 'false'
           commitChange: false
           branch: main
+          masterBranchName: main
+          workDir: golden-sample-app
           changes: |
             {
               ".github/release-drafter-transfer.yml": {
