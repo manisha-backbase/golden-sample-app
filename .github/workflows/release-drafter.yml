@@ -85,11 +85,12 @@ jobs:
           valueFile: '.github/release-drafter-transfer.yml'
           createPR: 'false'
           commitChange: false
+          branch: main
           changes: |
             {
-              'name-template': 'testing123',
-              'tag-template': 'testing123',
-              'tag-prefix': 'testing123'
+              .['name-template']: 'testing123',
+              .['tag-template']: 'testing123',
+              .['tag-prefix']: 'testing123'
             }
       
       # - name: Checkout code
