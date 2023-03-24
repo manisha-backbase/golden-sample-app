@@ -79,19 +79,17 @@ jobs:
   generate-config:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 
-
-      - name: generate yml file   
-        uses: fjogeleit/yaml-update-action@main
+      - uses: actions/checkout@v3
+      - uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: '.github/release-drafter-transfer.yml'
           createPR: 'false'
+          commitChange: false
           changes: |
             {
-              "name-template": "testing123",
-              "tag-template": "testing123",
-              "tag-prefix": "testing123"
+              'name-template': 'testing123',
+              'tag-template': 'testing123',
+              'tag-prefix': 'testing123'
             }
       
       # - name: Checkout code
