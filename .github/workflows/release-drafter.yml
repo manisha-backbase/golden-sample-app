@@ -89,9 +89,9 @@ jobs:
           masterBranchName: main
           changes: |
              {
-                "['name-template']": "testing123",
-                "['tag-template']": "testing123",
-                "['tag-prefix']": "testing123"
+                ['name-template']: "testing123",
+                ['tag-template']: "testing123",
+                ['tag-prefix']: "testing123"
               }
  
       # - name: Checkout code
