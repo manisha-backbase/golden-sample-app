@@ -83,19 +83,17 @@ jobs:
       - uses: fjogeleit/yaml-update-action@main
         with:
           createPR: 'false'
+          valueFile: 'github/release-drafter-transfer.yml'
           commitChange: false
           branch: main
           masterBranchName: main
           changes: |
-            {
-              ".github/release-drafter-transfer.yml": {
+             {
                 "['name-template']": "testing123",
                 "['tag-template']": "testing123",
                 "['tag-prefix']": "testing123"
               }
-            }
-            
-      
+ 
       # - name: Checkout code
       #   uses: actions/checkout@v2
 
