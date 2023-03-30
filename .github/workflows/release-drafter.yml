@@ -84,7 +84,7 @@ jobs:
       uses: actions/checkout@v2
 
       env:
-        FILE_NAME: release-drafter-testing.yml
+        FILE_NAME: "release-drafter-testing.yml"
         VALUE1: "golden-sample-app:.github/release-drafter.yml"
         VALUE2: "transfer@v$RESOLVED_VERSION"
         VALUE3: "transfer@v$RESOLVED_VERSION"
