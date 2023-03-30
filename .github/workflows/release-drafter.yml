@@ -98,11 +98,15 @@ jobs:
         echo "tag-prefix: ${{ env.VALUE4 }}" >> ${{ env.FILE_NAME }}
         echo "include-paths: ${{ env.VALUE5 }}" >> ${{ env.FILE_NAME }}
 
+    - name: Show YAML file
+      run: |
+        cat ${{ env.FILE_NAME }}
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: generated-yaml
-        path: $FILE_NAME
+        path: ${{ env.FILE_NAME }}
 
   # generate-config:
   #   runs-on: ubuntu-latest
