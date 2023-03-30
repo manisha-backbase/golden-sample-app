@@ -89,7 +89,10 @@ jobs:
           masterBranchName: main
           changes: |
              {
-                "$['name-template']": "testing123"                
+                "$['name-template']": "transactions@v@v$RESOLVED_VERSION",
+                "$['tag-template']": "transactions@v@v$RESOLVED_VERSION",
+                "$['tag-prefix']": "transactions@v",
+                "$['include-paths']": "libs/transfer/transactions"
               }
  
       # - name: Checkout code
@@ -139,7 +142,6 @@ jobs:
       - uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter-transfer.yml
-          commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
