@@ -83,7 +83,7 @@ jobs:
       - uses: fjogeleit/yaml-update-action@main
         with:
           createPR: 'false'
-          valueFile: 'github/release-drafter-transfer.yml'
+          valueFile: './.github/release-drafter-transfer.yml'
           commitChange: false
           branch: main
           masterBranchName: main
