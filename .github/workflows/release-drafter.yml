@@ -11,7 +11,13 @@ on:
   #   workflows: ["labeler.yml"]
   #   types:
   #     - completed
-
+env:
+  FILE_NAME: "release-drafter-testing.yml"
+  VALUE1: "golden-sample-app:.github/release-drafter.yml"
+  VALUE2: "transfer@v$RESOLVED_VERSION"
+  VALUE3: "transfer@v$RESOLVED_VERSION"
+  VALUE4: "transfer@v"
+  VALUE5: "libs/transfer/"
 jobs:
   # correct_repository:
   #   runs-on: ubuntu-latest
@@ -84,13 +90,6 @@ jobs:
       uses: actions/checkout@v2
     
     - name: Generate YAML file
-      env:
-          FILE_NAME: "release-drafter-testing.yml"
-          VALUE1: "golden-sample-app:.github/release-drafter.yml"
-          VALUE2: "transfer@v$RESOLVED_VERSION"
-          VALUE3: "transfer@v$RESOLVED_VERSION"
-          VALUE4: "transfer@v"
-          VALUE5: "libs/transfer/"
       run: |
         echo "_extends: ${{ env.VALUE1 }}" >> ${{ env.FILE_NAME }}
         echo "name-template: ${{ env.VALUE2 }}" >> ${{ env.FILE_NAME }}
@@ -175,7 +174,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: release-drafter-testing.yml
+          name: generated-yaml
       - uses: release-drafter/release-drafter@v5
         with:
           config-name: ${{ env.FILE_NAME }}
