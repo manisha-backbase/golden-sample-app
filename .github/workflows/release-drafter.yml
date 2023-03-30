@@ -82,22 +82,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      env:
-        FILE_NAME: "release-drafter-testing.yml"
-        VALUE1: "golden-sample-app:.github/release-drafter.yml"
-        VALUE2: "transfer@v$RESOLVED_VERSION"
-        VALUE3: "transfer@v$RESOLVED_VERSION"
-        VALUE4: "transfer@v"
-        VALUE5: "libs/transfer/"
     
     - name: Generate YAML file
+      env:
+          FILE_NAME: "release-drafter-testing.yml"
+          VALUE1: "golden-sample-app:.github/release-drafter.yml"
+          VALUE2: "transfer@v$RESOLVED_VERSION"
+          VALUE3: "transfer@v$RESOLVED_VERSION"
+          VALUE4: "transfer@v"
+          VALUE5: "libs/transfer/"
       run: |
         echo "_extends: ${{ env.VALUE1 }}" >> ${{ env.FILE_NAME }}
         echo "name-template: ${{ env.VALUE2 }}" >> ${{ env.FILE_NAME }}
         echo "tag-template: ${{ env.VALUE3 }}" >> ${{ env.FILE_NAME }}
         echo "tag-prefix: ${{ env.VALUE4 }}" >> ${{ env.FILE_NAME }}
         echo "include-paths: ${{ env.VALUE5 }}" >> ${{ env.FILE_NAME }}
-        
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
