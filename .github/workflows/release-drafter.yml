@@ -83,8 +83,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Set environment variables
-      run: |
+      env:
         FILE_NAME: release-drafter-testing.yml
         VALUE1: "golden-sample-app:.github/release-drafter.yml"
         VALUE2: "transfer@v$RESOLVED_VERSION"
