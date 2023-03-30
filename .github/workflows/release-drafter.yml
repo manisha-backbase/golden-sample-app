@@ -93,11 +93,11 @@ jobs:
     
     - name: Generate YAML file
       run: |
-        echo "_extends: $VALUE1" >> $FILE_NAME
-        echo "name-template: $VALUE2" >> $FILE_NAME
-        echo "tag-template: $VALUE3" >> $FILE_NAME
-        echo "tag-prefix: $VALUE4" >> $FILE_NAME
-        echo "include-paths: $VALUE5" >> $FILE_NAME
+        echo "_extends: ${{ env.VALUE1 }}" >> ${{ env.FILE_NAME }}
+        echo "name-template: ${{ env.VALUE2 }}" >> ${{ env.FILE_NAME }}
+        echo "tag-template: ${{ env.VALUE3 }}" >> ${{ env.FILE_NAME }}
+        echo "tag-prefix: ${{ env.VALUE4 }}" >> ${{ env.FILE_NAME }}
+        echo "include-paths: ${{ env.VALUE5 }}" >> ${{ env.FILE_NAME }}
 
 
     - name: Upload artifact
