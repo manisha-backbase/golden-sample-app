@@ -142,6 +142,7 @@ jobs:
       - uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter-transfer.yml
+          commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
