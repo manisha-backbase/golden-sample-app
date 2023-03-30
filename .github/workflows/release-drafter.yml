@@ -75,25 +75,56 @@ jobs:
             })
             const labels1 = labels.map(label => label.name)
             console.log(`::set-output name=libraries::${labels1}`); 
-          
-  generate-config:
+  
+  generate:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: fjogeleit/yaml-update-action@main
-        with:
-          createPR: 'false'
-          valueFile: './.github/release-drafter-transfer.yml'
-          commitChange: false
-          branch: main
-          masterBranchName: main
-          changes: |
-             {
-                "$['name-template']": "transactions@v@v$RESOLVED_VERSION",
-                "$['tag-template']": "transactions@v@v$RESOLVED_VERSION",
-                "$['tag-prefix']": "transactions@v",
-                "$['include-paths']": "libs/transfer/transactions"
-              }
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set environment variables
+      run: |
+        FILE_NAME: release-drafter-testing.yml
+        VALUE1: "golden-sample-app:.github/release-drafter.yml"
+        VALUE2: "transfer@v$RESOLVED_VERSION"
+        VALUE3: "transfer@v$RESOLVED_VERSION"
+        VALUE4: "transfer@v"
+        VALUE5: "libs/transfer/"
+    
+    - name: Generate YAML file
+      run: |
+        echo "_extends: $VALUE1" >> $FILE_NAME
+        echo "name-template: $VALUE2" >> $FILE_NAME
+        echo "tag-template: $VALUE3" >> $FILE_NAME
+        echo "tag-prefix: $VALUE4" >> $FILE_NAME
+        echo "include-paths: $VALUE5" >> $FILE_NAME
+
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: generated-yaml
+        path: $FILE_NAME
+
+  # generate-config:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: fjogeleit/yaml-update-action@main
+  #       with:
+  #         createPR: 'false'
+  #         valueFile: './.github/release-drafter-transfer.yml'
+  #         commitChange: false
+  #         branch: main
+  #         masterBranchName: main
+  #         changes: |
+  #            {
+  #               "$['name-template']": "transactions@v@v$RESOLVED_VERSION",
+  #               "$['tag-template']": "transactions@v@v$RESOLVED_VERSION",
+  #               "$['tag-prefix']": "transactions@v",
+  #               "$['include-paths']": "libs/transactions"
+  #             }
  
       # - name: Checkout code
       #   uses: actions/checkout@v2
@@ -128,9 +159,10 @@ jobs:
       #       };            
       #       const yamlString = yaml.dump(config);          
       #       fs.writeFileSync('.github/config.yml', yamlString);
+      
   update_release_draft:
     # if: github.event_name == 'push'
-    needs: generate-config
+    needs: generate
     # strategy:
     #   matrix:
     #     libraries: ['transactions', 'transfer']
@@ -139,9 +171,13 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: release-drafter-testing.yml
       - uses: release-drafter/release-drafter@v5
         with:
-          config-name: release-drafter-transfer.yml
+          config-name: ${{ env.FILE_NAME }}
           commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
