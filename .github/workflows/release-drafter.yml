@@ -82,7 +82,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
       env:
         FILE_NAME: "release-drafter-testing.yml"
         VALUE1: "golden-sample-app:.github/release-drafter.yml"
@@ -98,8 +97,7 @@ jobs:
         echo "tag-template: ${{ env.VALUE3 }}" >> ${{ env.FILE_NAME }}
         echo "tag-prefix: ${{ env.VALUE4 }}" >> ${{ env.FILE_NAME }}
         echo "include-paths: ${{ env.VALUE5 }}" >> ${{ env.FILE_NAME }}
-
-
+        
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
