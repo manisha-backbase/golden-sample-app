@@ -82,31 +82,6 @@ jobs:
             const labels1 = labels.map(label => label.name)
             console.log(`::set-output name=libraries::${labels1}`); 
   
-  generate:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    
-    - name: Generate YAML file
-      run: |
-        echo "_extends: ${{ env.VALUE1 }}" >> ${{ env.FILE_NAME }}
-        echo "name-template: ${{ env.VALUE2 }}" >> ${{ env.FILE_NAME }}
-        echo "tag-template: ${{ env.VALUE3 }}" >> ${{ env.FILE_NAME }}
-        echo "tag-prefix: ${{ env.VALUE4 }}" >> ${{ env.FILE_NAME }}
-        echo "include-paths: ${{ env.VALUE5 }}" >> ${{ env.FILE_NAME }}
-
-    - name: Show YAML file
-      run: |
-        cat ${{ env.FILE_NAME }}
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: generated-yaml
-        path: ${{ env.FILE_NAME }}
-
   # generate-config:
   #   runs-on: ubuntu-latest
   #   steps:
@@ -160,38 +135,51 @@ jobs:
       #       const yamlString = yaml.dump(config);          
       #       fs.writeFileSync('.github/config.yml', yamlString);
       
-  update_release_draft:
-    # if: github.event_name == 'push'
-    needs: generate
-    # strategy:
-    #   matrix:
-    #     libraries: ['transactions', 'transfer']
-    permissions:
-      contents: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: generated-yaml
-      - uses: release-drafter/release-drafter@v5
-        with:
-          config-name: ${{ env.FILE_NAME }}
-          commitish: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # update_release_draft:
+  #   # if: github.event_name == 'push'
+  #   # strategy:
+  #   #   matrix:
+  #   #     libraries: ['transactions', 'transfer']
+  #   permissions:
+  #     contents: write
+  #     pull-requests: write
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: generated-yaml
+  #     - uses: release-drafter/release-drafter@v5
+  #       with:
+  #         config-name: ${{ env.FILE_NAME }}
+  #         commitish: main
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # update_release_draft-transfer:
-  #     permissions:
-  #       contents: write
-  #       pull-requests: write
-  #     if: contains(github.event.pull_request.labels.*.name, 'transfer')
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #       - uses: release-drafter/release-drafter@v5
-  #         with:
-  #           config-name: release-drafter-transfer.yml
-  #           commitish: main
-  #         env:
-  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  update_release_draft-transfer:
+      permissions:
+        contents: write
+        pull-requests: write
+      if: contains(github.event.pull_request.labels.*.name, 'transfer')
+      runs-on: ubuntu-latest
+      steps:
+        - uses: release-drafter/release-drafter@v5
+          with:
+            config-name: release-drafter-transfer.yml
+            commitish: main
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update_release_draft-transactions:
+      permissions:
+        contents: write
+        pull-requests: write
+      if: contains(github.event.pull_request.labels.*.name, 'transactions')
+      runs-on: ubuntu-latest
+      steps:
+        - uses: release-drafter/release-drafter@v5
+          with:
+            config-name: release-drafter-tranactionsr.yml
+            commitish: main
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
