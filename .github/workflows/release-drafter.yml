@@ -55,7 +55,7 @@ jobs:
       - name: Get Labels
         if: github.event_name == 'push'
         id: get_labels
-        uses: actions/github-script@v4
+        uses: actions/github-script@v6
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -104,7 +104,7 @@ jobs:
       #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # - name: Generate config file
-      #   uses: actions/github-script@v4
+      #   uses: actions/github-script@v6
       #   env: 
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
