@@ -3,11 +3,3 @@ transactions:
 
 transfer:
 - libs/transfer/**/*
-
-major:
-- 'major-*'
-- 'feat-*'
-
-minor:
-- 'minor-*'
-- 'fix-*'
