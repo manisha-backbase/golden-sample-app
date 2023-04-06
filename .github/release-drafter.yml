@@ -1,17 +1,10 @@
 categories:
-  # - title: Transacations
-  #   labels:
-  #   - 'transacations'
-  # - title: Transfer
-  #   labels:
-  #   - 'transfer'
   - title: 'Added'
     labels:
       - 'enhancement'
   - title: 'Fixed'
     labels:
       - 'bug'
-      - 'fix'
   - title: 'Changed'
     labels:
       - 'maintenance'
