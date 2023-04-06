@@ -1,10 +1,4 @@
 categories:
-  # - title: Transacations
-  #   labels:
-  #   - 'transacations'
-  # - title: Transfer
-  #   labels:
-  #   - 'transfer'
   - title: 'Added'
     labels:
       - 'enhancement'
