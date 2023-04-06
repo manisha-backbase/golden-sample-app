@@ -4,20 +4,11 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, reopened, synchronize]
         
   # workflow_run:
   #   workflows: ["labeler.yml"]
   #   types:
   #     - completed
-env:
-  FILE_NAME: "release-drafter-testing.yml"
-  VALUE1: "golden-sample-app:.github/release-drafter.yml"
-  VALUE2: "transfer@v$RESOLVED_VERSION"
-  VALUE3: "transfer@v$RESOLVED_VERSION"
-  VALUE4: "transfer@v"
-  VALUE5: "libs/transfer/"
 jobs:
   # correct_repository:
   #   runs-on: ubuntu-latest
@@ -179,7 +170,7 @@ jobs:
       steps:
         - uses: release-drafter/release-drafter@v5
           with:
-            config-name: release-drafter-tranactionsr.yml
+            config-name: release-drafter-transactions.yml
             commitish: main
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
