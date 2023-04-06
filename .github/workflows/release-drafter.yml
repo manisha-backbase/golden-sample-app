@@ -5,10 +5,10 @@ on:
     branches:
       - main
         
-  # workflow_run:
-  #   workflows: ["labeler.yml"]
-  #   types:
-  #     - completed
+  workflow_run:
+    workflows: ["labeler.yml"]
+    types:
+      - completed
 jobs:
   # correct_repository:
   #   runs-on: ubuntu-latest
