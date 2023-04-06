@@ -4,14 +4,11 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, reopened, synchronize]
         
   # workflow_run:
   #   workflows: ["labeler.yml"]
   #   types:
   #     - completed
-
 jobs:
   # correct_repository:
   #   runs-on: ubuntu-latest
@@ -28,116 +25,152 @@ jobs:
   #         x=${{ toJson(github.event.pull_request.labels.*.name) }}
   #         echo $x
 
-  # get_labels:
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push'
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  get_labels:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Get Labels
-  #       uses: actions/github-script@v6
-  #       id: get_issue_number
-  #       env: 
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         script: |
-  #           if (context.issue.number) {
-  #             // Return issue number if present
-  #             return context.issue.number;
-  #           } else {
-  #             // Otherwise return issue number from commit
-  #             return (
-  #             await github.rest.repos.listPullRequestsAssociatedWithCommit({
-  #               commit_sha: context.sha,
-  #               owner: context.repo.owner,
-  #               repo: context.repo.repo,
-  #             })
-  #           ).data[0].number;
-  #           }
-  #         result-encoding: string
+      - name: Get Labels
+        uses: actions/github-script@v6
+        id: get_issue_number
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            if (context.issue.number) {
+              // Return issue number if present
+              return context.issue.number;
+            } else {
+              // Otherwise return issue number from commit
+              return (
+              await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                commit_sha: context.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })
+            ).data[0].number;
+            }
+          result-encoding: string
 
-  #     - name: Issue number
-  #       run: echo '${{steps.get_issue_number.outputs.result}}'
+      - name: Issue number
+        run: echo '${{steps.get_issue_number.outputs.result}}'
       
-  #     - name: Get Labels
-  #       if: github.event_name == 'push'
-  #       id: get_labels
-  #       uses: actions/github-script@v4
-  #       env: 
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         script: |
-  #           const { data: labels } = await github.issues.listLabelsOnIssue({
-  #           owner: context.repo.owner,
-  #           repo: context.repo.repo,
-  #           issue_number: ${{steps.get_issue_number.outputs.result}}
-  #           })
-  #           const labels1 = labels.map(label => label.name)
-  #           console.log(`::set-output name=libraries::${labels1}`);   
+      - name: Get Labels
+        if: github.event_name == 'push'
+        id: get_labels
+        uses: actions/github-script@v4
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const { data: labels } = await github.issues.listLabelsOnIssue({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: ${{steps.get_issue_number.outputs.result}}
+            })
+            const labels1 = labels.map(label => label.name)
+            console.log(`::set-output name=libraries::${labels1}`); 
+  
   # generate-config:
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
+  #     - uses: actions/checkout@v3
+  #     - uses: fjogeleit/yaml-update-action@main
   #       with:
-  #         node-version: 16
-  #         cache: 'npm'
-  #         registry-url: 'https://repo.backbase.com/artifactory/api/npm/npm-backbase/'
-  #         scope: '@backbase'
-          
-  #     - name: Install js-yaml
-  #       run: npm ci --legacy-peer-deps
+  #         createPR: 'false'
+  #         valueFile: './.github/release-drafter-transfer.yml'
+  #         commitChange: false
+  #         branch: main
+  #         masterBranchName: main
+  #         changes: |
+  #            {
+  #               "$['name-template']": "transactions@v@v$RESOLVED_VERSION",
+  #               "$['tag-template']": "transactions@v@v$RESOLVED_VERSION",
+  #               "$['tag-prefix']": "transactions@v",
+  #               "$['include-paths']": "libs/transactions"
+  #             }
+ 
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 16
+      #     cache: 'npm'
+      #     registry-url: 'https://repo.backbase.com/artifactory/api/npm/npm-backbase/'
+      #     scope: '@backbase'
+
+      # - name: Install js-yaml
+      #   run: npm ci --legacy-peer-deps
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # - name: Generate config file
+      #   uses: actions/github-script@v4
+      #   env: 
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     script: |
+      #       const yaml = require('js-yaml');
+      #       const fs = require('fs');
+      #       const config = {
+      #         '_extends': 'golden-sample-app:.github/release-drafter.yml',
+      #         'name-template': 'transactions@v$RESOLVED_VERSION',
+      #         'tag-template': 'transactions@v$RESOLVED_VERSION',
+      #         'tag-prefix': 'transactions@v',
+      #         'include-paths': 'libs/transactions/'
+      #       };            
+      #       const yamlString = yaml.dump(config);          
+      #       fs.writeFileSync('.github/config.yml', yamlString);
+      
+  # update_release_draft:
+  #   # if: github.event_name == 'push'
+  #   # strategy:
+  #   #   matrix:
+  #   #     libraries: ['transactions', 'transfer']
+  #   permissions:
+  #     contents: write
+  #     pull-requests: write
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: generated-yaml
+  #     - uses: release-drafter/release-drafter@v5
+  #       with:
+  #         config-name: ${{ env.FILE_NAME }}
+  #         commitish: main
   #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  #     - name: Generate config file
-  #       uses: actions/github-script@v4
-  #       env: 
   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         script: |
-  #           const yaml = require('js-yaml');
-  #           const fs = require('fs');
-  #           const config = {
-  #             '_extends': 'golden-sample-app:.github/release-drafter.yml',
-  #             'name-template': 'transactions@v$RESOLVED_VERSION',
-  #             'tag-template': 'transactions@v$RESOLVED_VERSION',
-  #             'tag-prefix': 'transactions@v',
-  #             'include-paths': 'libs/transactions/'
-  #           };            
-  #           const yamlString = yaml.dump(config);          
-  #           fs.writeFileSync('.github/config.yml', yamlString);
-  update_release_draft:
-    # if: github.event_name == 'push'
-    # needs: generate-config
-    # strategy:
-    #   matrix:
-    #     libraries: ['transactions']
-    permissions:
-      contents: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: release-drafter/release-drafter@v5
-        with:
-          commitish: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # update_release_draft-transfer:
-  #     permissions:
-  #       contents: write
-  #       pull-requests: write
-  #     if: contains(github.event.pull_request.labels.*.name, 'transfer')
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #       - uses: release-drafter/release-drafter@v5
-  #         with:
-  #           config-name: release-drafter-transfer.yml
-  #           commitish: main
-  #         env:
-  #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  update_release_draft-transfer:
+      permissions:
+        contents: write
+        pull-requests: write
+      if: contains(github.event.pull_request.labels.*.name, 'transfer')
+      runs-on: ubuntu-latest
+      steps:
+        - uses: release-drafter/release-drafter@v5
+          with:
+            config-name: release-drafter-transfer.yml
+            commitish: main
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update_release_draft-transactions:
+      permissions:
+        contents: write
+        pull-requests: write
+      if: contains(github.event.pull_request.labels.*.name, 'transactions')
+      runs-on: ubuntu-latest
+      steps:
+        - uses: release-drafter/release-drafter@v5
+          with:
+            config-name: release-drafter-transactions.yml
+            commitish: main
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
