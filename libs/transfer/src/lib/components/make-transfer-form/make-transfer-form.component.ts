@@ -44,7 +44,7 @@ export class MakeTransferFormComponent implements OnInit {
   }
 
   transfer(): void {
-    console.log("12345");
+    console.log("123455");
     if (this.makeTransferForm.valid) {
       this.submitTransfer.emit({
         fromAccount: this.makeTransferForm.value.fromAccount,
