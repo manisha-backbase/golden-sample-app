@@ -13,13 +13,58 @@ on:
 jobs:
 
   get_labels:
-      runs-on: ubuntu-latest
-      steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Labels
+        uses: actions/github-script@v6
+        id: get_issue_number
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            if (context.issue.number) {
+              // Return issue number if present
+              return context.issue.number;
+            } else {
+              // Otherwise return issue number from commit
+              return (
+              await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                commit_sha: context.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })
+            ).data[0].number;
+            }
+          result-encoding: string
+
       - name: Issue number
-        run: echo "${{ toJSON(github.event.pull_request.labels) }}"
-        
+        run: echo '${{steps.get_issue_number.outputs.result}}'
+      
+      - name: Get Labels
+        if: github.event_name == 'push'
+        id: get_labels
+        uses: actions/github-script@v4
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const { data: labels } = await github.issues.listLabelsOnIssue({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: ${{steps.get_issue_number.outputs.result}}
+            })
+            const labels1 = labels.map(label => label.name)
+            console.log(`::set-output name=libraries::${labels1}`); 
+            
+      - name: Issue number
+        run: echo '${{steps.get_labels.outputs.libraries}}'
+
   update_release_draft-transactions:
-    if: contains(github.event.pull_request.labels.*.name, 'transactions')
+    needs: get_labels
+    if: contains(steps.get_labels.outputs.libraries, 'transactions')
     permissions:
       contents: write
       pull-requests: write
@@ -32,7 +77,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update_release_draft-transfer:
-    if: contains(github.event.pull_request.labels.*.name, 'transfer')
+    needs: get_labels
+    if: contains((steps.get_labels.outputs.libraries, 'transfer')
     permissions:
       contents: write
       pull-requests: write
