@@ -58,13 +58,13 @@ jobs:
             })
             const labels1 = labels.map(label => label.name)
             console.log(`::set-output name=libraries::${labels1}`); 
-            
+
       - name: Issue number
         run: echo '${{steps.get_labels.outputs.libraries}}'
 
   update_release_draft-transactions:
     needs: get_labels
-    if: contains(steps.get_labels.outputs.libraries, 'transactions')
+    if: contains(${{steps.get_labels.outputs.libraries}}, 'transactions')
     permissions:
       contents: write
       pull-requests: write
@@ -78,7 +78,7 @@ jobs:
 
   update_release_draft-transfer:
     needs: get_labels
-    if: contains((steps.get_labels.outputs.libraries, 'transfer')
+    if: contains(${{steps.get_labels.outputs.libraries}}, 'transfer')
     permissions:
       contents: write
       pull-requests: write
