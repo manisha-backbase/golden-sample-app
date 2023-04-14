@@ -12,6 +12,12 @@ on:
 
 jobs:
 
+  get_labels:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Issue number
+        run: echo "${{ toJSON(github.event.pull_request.labels) }}"
+        
   update_release_draft-transactions:
     if: contains(github.event.pull_request.labels.*.name, 'transactions')
     permissions:
