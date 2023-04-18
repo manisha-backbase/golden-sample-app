@@ -50,8 +50,6 @@ autolabeler:
 template: |
   ## Changes
 
-  $CHANGES
-
   ## Contributors
 
   Thanks to $CONTRIBUTORS for your contributions to this release!
