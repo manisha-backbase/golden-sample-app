@@ -16,7 +16,7 @@ export class MakeTransferSummaryComponent {
   @Output() closeTransfer = new EventEmitter<void>();
 
   submit(): void {
-    console.log('hii');
+    console.log('hii123');
     this.submitTransfer.emit();
   }
 
