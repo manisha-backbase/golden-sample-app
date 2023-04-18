@@ -1,3 +1,7 @@
+template: |
+  # What's Changed
+  $CHANGES
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 categories:
   - title: 'Added'
     labels:
@@ -11,7 +15,6 @@ categories:
   - title: 'Internal'
     labels:
       - 'internal'
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 version-resolver:
   major:
     labels:
@@ -45,11 +48,3 @@ autolabeler:
   - label: 'patch'
     title:
       - '/patch/i'
-      
-    
-template: |
-  ## Changes
-
-  ## Contributors
-
-  Thanks to $CONTRIBUTORS for your contributions to this release!
