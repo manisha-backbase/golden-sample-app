@@ -26,12 +26,15 @@ jobs:
       - name: 'Extract project from tag'
         id: set-project-from-tag
         run: |
-          version=$(echo "${{ github.event.release.tag_name }}" | awk -F"v" '{print $1}')
-          echo "extract project:  ${{ github.event.release.tag_name }}, ${version}"
+          module=$(echo "${{ github.event.release.tag_name }}" | awk -F"@v" '{print $1}')
+          version=$(echo "${{ github.event.release.tag_name }}" | awk -F"@v" '{print $2}')
+          echo "extract project:  ${{ github.event.release.tag_name }}, ${module}, ${version}"
+          echo "module=$module" >> $GITHUB_OUTPUT
           echo "version=$version" >> $GITHUB_OUTPUT
       
       - name: 'Bump'
-        run: cd libs/transfer &&
+        if: ${{ steps.set-project-from-tag.outputs.module }} && ${{ steps.set-project-from-tag.outputs.version }}
+        run: cd libs/${{ steps.set-project-from-tag.outputs.module }} &&
              npm version ${{ steps.set-project-from-tag.outputs.version }}
       
       - name: Update Changelog
@@ -39,7 +42,7 @@ jobs:
         with:
           latest-version: ${{ steps.set-project-from-tag.outputs.version}}
           release-notes: ${{ github.event.release.body }}
-          path-to-changelog: 'CHANGELOG.md'
+          path-to-changelog: 'libs/${{ steps.set-project-from-tag.outputs.module }}/CHANGELOG.md'
       
       # - name: Build and publish
       #   run: npm run build && cd dist/libs/${{ steps.set-project-from-tag.outputs.module }} && npm publish
