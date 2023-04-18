@@ -88,7 +88,7 @@ jobs:
     steps:
       - uses: release-drafter/release-drafter@v5
         with:
-          config-name: release-drafter-transfer.yml
+          config-name: release-drafter.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
